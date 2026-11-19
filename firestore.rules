@@ -1,0 +1,72 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() { return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)); }
+    function isAgent() { return signedIn() && exists(/databases/$(database)/documents/deliveryAgents/$(request.auth.uid)); }
+
+    match /products/{id} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    match /shops/{id} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    match /settings/{id} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    match /coupons/{id} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /orders/{orderId} {
+      allow create: if
+        request.resource.data.keys().hasAll(['customer','items','subtotal','deliveryFee','grandTotal','payment','slot','status','createdAt','cashCollected']) &&
+        request.resource.data.customer.keys().hasAll(['name','phone','address','area']) &&
+        request.resource.data.customer.phone is string &&
+        request.resource.data.customer.phone.matches('^[0-9]{10}$') &&
+        request.resource.data.subtotal is number &&
+        request.resource.data.subtotal >= 0 &&
+        request.resource.data.grandTotal is number &&
+        request.resource.data.status == 'New' &&
+        request.resource.data.items is list &&
+        request.resource.data.items.size() > 0 &&
+        request.resource.data.items.size() <= 100;
+      allow get: if true;
+      allow list: if isAdmin() || (isAgent() && resource.data.assignedAgentId == request.auth.uid);
+      allow update: if isAdmin() ||
+        (isAgent() && resource.data.assignedAgentId == request.auth.uid &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt','cashCollected']));
+      allow delete: if isAdmin();
+    }
+
+    match /deliveryAgents/{agentId} {
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == agentId);
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() ||
+        (signedIn() && request.auth.uid == agentId &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['online','fcmToken','updatedAt']));
+    }
+
+    match /admins/{adminId} {
+      allow read: if signedIn() && request.auth.uid == adminId;
+      allow write: if false;
+    }
+
+    match /ratings/{ratingId} {
+      allow create: if
+        request.resource.data.orderId is string &&
+        request.resource.data.rating is number &&
+        request.resource.data.rating >= 1 &&
+        request.resource.data.rating <= 5;
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /ledger/{ledgerId} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

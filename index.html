@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0c831f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="description" content="Kharagpur Fresh - Superfast 10-Minute Grocery Delivery in Haveli Kharagpur, Munger, Bihar. Fresh vegetables, fruits, dairy, snacks and daily essentials.">
+  <title>Kharagpur Fresh | 10-Minute Quick Commerce Grocery Delivery</title>
+  
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Razorpay Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  
+  <link rel="stylesheet" href="./style.css?v=3">
+</head>
+<body>
+  <!-- Offline banner -->
+  <div id="offline-banner" class="offline-banner" hidden>
+    <span>📡 You're currently offline. Browsing saved catalogue.</span>
+  </div>
+
+  <!-- Store closed screen -->
+  <div id="closed-screen" class="closed-screen" hidden>
+    <div class="closed-card">
+      <div class="logo-mark">⚡</div>
+      <h1>Store is currently closed</h1>
+      <p id="closed-hours">We will open soon for instant 10-min delivery.</p>
+      <button class="primary-button" type="button" onclick="document.getElementById('closed-screen').hidden=true">Browse catalogue anyway</button>
+    </div>
+  </div>
+
+  <!-- Main Top Bar (Blinkit Style) -->
+  <header class="topbar">
+    <div class="topbar-row">
+      <div class="brand-location">
+        <div class="brand-lockup" role="button" tabindex="0" data-view="home">
+          <div class="brand-badge">
+            <span class="brand-icon">⚡</span>
+            <div class="brand-text">
+              <strong>Kharagpur<span class="brand-accent">Fresh</span></strong>
+              <small class="brand-tagline">10 MINS DELIVERY</small>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="top-actions">
+        <button id="wallet-top-btn" class="wallet-pill" type="button" aria-label="Wallet balance">
+          <span class="wallet-coin">🪙</span>
+          <span id="wallet-balance-display">₹150</span>
+        </button>
+        <button id="lang-toggle" class="lang-pill" type="button" title="Switch Language">हिं</button>
+        <button id="profile-top-btn" class="profile-avatar-btn" type="button" aria-label="User Profile">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Smart Search Bar -->
+    <div class="search-container">
+      <label class="search-box" for="search-input">
+        <span class="search-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.3-4.3"/>
+          </svg>
+        </span>
+        <input id="search-input" type="search" placeholder='Search "milk, bread & eggs"' autocomplete="off" spellcheck="false">
+        <button id="clear-search-btn" class="clear-search-btn" type="button" aria-label="Clear search" hidden>✕</button>
+        <button id="voice-search-btn" class="voice-search-btn" type="button" aria-label="Voice search" title="Voice Search">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="22"/>
+          </svg>
+        </button>
+      </label>
+
+      <!-- Trending Quick Search Tags Rail -->
+      <div id="quick-search-tags" class="quick-search-tags">
+        <span class="tags-label">Trending:</span>
+        <button type="button" class="search-tag" data-query="Milk">🥛 Milk</button>
+        <button type="button" class="search-tag" data-query="Tomato">🍅 Tomato</button>
+        <button type="button" class="search-tag" data-query="Atta">🌾 Atta</button>
+        <button type="button" class="search-tag" data-query="Chips">🍿 Chips</button>
+        <button type="button" class="search-tag" data-query="Butter">🧈 Amul Butter</button>
+        <button type="button" class="search-tag" data-query="Maggi">🍜 Maggi</button>
+        <button type="button" class="search-tag" data-query="Eggs">🥚 Eggs</button>
+        <button type="button" class="search-tag" data-query="Samosa">🥟 Samosa</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== PAGE: HOME VIEW ==================== -->
+  <main id="home-view" class="page">
+    <div id="announcement" class="announcement" hidden></div>
+
+    <!-- Promotional Hero Carousel -->
+    <section class="hero-banner" aria-label="Promotions">
+      <div class="hero-slide active">
+        <div class="hero-copy">
+          <span class="hero-kicker">⚡ 10-MINUTE QUICK COMMERCE</span>
+          <h1>Fresh picks at<br><strong>mandi rates</strong></h1>
+          <p>Farm fresh veggies, dairy & daily groceries delivered under 10 minutes.</p>
+          <button type="button" class="hero-order" data-scroll="products">Shop Now →</button>
+        </div>
+        <img class="hero-image" src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=900&q=80" alt="Fresh Vegetables" loading="eager">
+      </div>
+
+      <div class="hero-slide">
+        <div class="hero-copy">
+          <span class="hero-kicker">CRAVINGS & SNACKS</span>
+          <h1>Chilled drinks &<br><strong>hot munchies</strong></h1>
+          <p>Cold drinks, ice creams, chips & hot samosas delivered in 10 minutes.</p>
+          <button type="button" class="hero-order" data-category="Snacks">Explore Snacks →</button>
+        </div>
+        <img class="hero-image" src="https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=900&q=80" alt="Snacks and Cold Drinks" loading="lazy">
+      </div>
+
+      <div class="hero-slide">
+        <div class="hero-copy">
+          <span class="hero-kicker">KITCHEN SUPER SAVERS</span>
+          <h1>Stock up pantry<br><strong>save up to 30%</strong></h1>
+          <p>Aashirvaad Atta, Basmati Rice, Dals & Cooking Oils at wholesale prices.</p>
+          <button type="button" class="hero-order" data-category="Grocery">Save Big →</button>
+        </div>
+        <img class="hero-image" src="https://images.unsplash.com/photo-1601600576337-c1d8a0d1373c?w=900&q=80" alt="Kitchen Grocery Essentials" loading="lazy">
+      </div>
+
+      <div class="hero-dots" aria-label="Promotion slides">
+        <button class="active" type="button" data-slide="0" aria-label="Slide 1"></button>
+        <button type="button" data-slide="1" aria-label="Slide 2"></button>
+        <button type="button" data-slide="2" aria-label="Slide 3"></button>
+      </div>
+    </section>
+
+    <!-- Value Proposition Trust Bar -->
+    <div class="benefit-row" aria-label="Store benefits">
+      <span><b>⚡</b> 10-15 Min Delivery</span>
+      <span><b>✓</b> 100% Mandi Fresh</span>
+      <span><b>₹</b> Lowest Prices</span>
+      <span><b>💳</b> Razorpay & COD</span>
+    </div>
+
+    <!-- Repeat Order Card (Auto shows if previous order exists) -->
+    <button id="repeat-order" class="repeat-card" type="button" hidden>
+      <span class="repeat-icon">↻</span>
+      <span>
+        <strong id="repeat-title">Repeat last order</strong>
+        <small id="repeat-subtitle">Tap to re-add your favorite items to cart</small>
+      </span>
+      <span class="repeat-arrow">›</span>
+    </button>
+
+    <!-- Category Quick Grid / Story Tiles (Blinkit Style) -->
+    <section class="quick-category-section" aria-label="Quick Categories">
+      <div class="section-heading">
+        <h2>Explore Categories</h2>
+        <span class="section-caption" data-scroll="categories" role="button">See all ›</span>
+      </div>
+      <div class="quick-category-grid">
+        <button class="quick-cat-card" type="button" data-category="Vegetables">
+          <span class="cat-icon-circle bg-green">🥬</span>
+          <span class="cat-label">Vegetables</span>
+        </button>
+        <button class="quick-cat-card" type="button" data-category="Fruits">
+          <span class="cat-icon-circle bg-red">🍎</span>
+          <span class="cat-label">Fresh Fruits</span>
+        </button>
+        <button class="quick-cat-card" type="button" data-category="Dairy & Bakery">
+          <span class="cat-icon-circle bg-blue">🥛</span>
+          <span class="cat-label">Dairy & Eggs</span>
+        </button>
+        <button class="quick-cat-card" type="button" data-category="Snacks">
+          <span class="cat-icon-circle bg-yellow">🍿</span>
+          <span class="cat-label">Munchies</span>
+        </button>
+        <button class="quick-cat-card" type="button" data-category="Grocery">
+          <span class="cat-icon-circle bg-amber">🌾</span>
+          <span class="cat-label">Atta & Dals</span>
+        </button>
+        <button class="quick-cat-card" type="button" data-category="Ready Food">
+          <span class="cat-icon-circle bg-orange">🍱</span>
+          <span class="cat-label">Ready Food</span>
+        </button>
+        <button class="quick-cat-card" type="button" data-category="Medicine">
+          <span class="cat-icon-circle bg-teal">💊</span>
+          <span class="cat-label">10-Min Pharma</span>
+        </button>
+        <button class="quick-cat-card" type="button" data-category="All">
+          <span class="cat-icon-circle bg-purple">✦</span>
+          <span class="cat-label">All Items</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ⚡ Flash Deals / Super Saver Section with Live Countdown -->
+    <section id="flash-deals-section" class="flash-deals-section" aria-label="Flash Deals">
+      <div class="flash-deals-header">
+        <div class="flash-title-wrap">
+          <span class="flash-badge">⚡ SUPER SAVER</span>
+          <h2>Deal of the Day</h2>
+        </div>
+        <div class="deal-countdown">
+          <span class="timer-label">Ends in</span>
+          <span id="deal-timer" class="timer-clock">02:44:18</span>
+        </div>
+      </div>
+      <div id="flash-deals-rail" class="flash-deals-rail" aria-live="polite"></div>
+    </section>
+
+    <!-- Curated Themed Shelves (Morning Essentials & Fresh Mandi) -->
+    <section id="morning-essentials-section" class="curated-shelf-section">
+      <div class="section-heading">
+        <div>
+          <h2>🥛 Morning Essentials</h2>
+          <small class="section-subtext">Milk, Curd, Bread, Butter & Farm Fresh Eggs</small>
+        </div>
+        <button class="text-button" type="button" data-category="Dairy & Bakery">View all</button>
+      </div>
+      <div id="morning-essentials-rail" class="shelf-horizontal-rail"></div>
+    </section>
+
+    <section id="farm-fresh-section" class="curated-shelf-section">
+      <div class="section-heading">
+        <div>
+          <h2>🥬 Farm Fresh Vegetables & Fruits</h2>
+          <small class="section-subtext">Direct from local mandis in Kharagpur</small>
+        </div>
+        <button class="text-button" type="button" data-category="Vegetables">View all</button>
+      </div>
+      <div id="farm-fresh-rail" class="shelf-horizontal-rail"></div>
+    </section>
+
+    <!-- Category Tabs Rail -->
+    <div id="category-section" class="section-heading category-heading">
+      <h2 id="categories-title">Shop by Category</h2>
+      <span class="section-caption" data-scroll="categories">All categories ›</span>
+    </div>
+    <div id="category-chips" class="category-chips"></div>
+
+    <!-- Category Explorer Drawer / Menu (full category explorer) -->
+    <div id="category-menu" class="category-menu" aria-label="All shopping categories"></div>
+
+    <!-- Main Products Section -->
+    <div class="section-heading product-heading" id="products-anchor">
+      <div>
+        <h2 id="products-title">Popular Items Near You</h2>
+        <small id="product-count-caption" class="section-subtext">40 items available in Haveli Kharagpur</small>
+      </div>
+      <div class="sort-toolbar">
+        <label for="sort-select" class="visually-hidden">Sort products</label>
+        <select id="sort-select" class="sort-dropdown">
+          <option value="popular">Popularity</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="discount">Biggest Discount</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div id="product-grid" class="product-grid" aria-live="polite"></div>
+
+    <!-- Trust & Quality Guarantee Footer -->
+    <footer class="store-trust-footer">
+      <div class="trust-card">
+        <div class="trust-icon">⚡</div>
+        <div>
+          <strong>Superfast Delivery</strong>
+          <small>Orders packed with care and delivered in 10-15 minutes.</small>
+        </div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">🛡️</div>
+        <div>
+          <strong>100% Quality Guaranteed</strong>
+          <small>Directly sourced from trusted local stores & farmers in Haveli Kharagpur.</small>
+        </div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">💳</div>
+        <div>
+          <strong>Razorpay & Cash on Delivery</strong>
+          <small>Pay securely via UPI (GPay/PhonePe), Cards or Cash on Delivery.</small>
+        </div>
+      </div>
+      <div class="store-info-footer">
+        <p><strong>Kharagpur Fresh</strong> · Hyperlocal Quick Commerce</p>
+        <p>Haveli Kharagpur, Munger, Bihar - 811202</p>
+        <p>Helpline: <a id="footer-support-link" href="https://wa.me/919876543210" target="_blank" rel="noopener">Chat on WhatsApp</a></p>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ==================== PAGE: CART VIEW ==================== -->
+  <main id="cart-view" class="page" hidden>
+    <div class="cart-header">
+      <button class="back-button" data-view="home" type="button" aria-label="Back to home">←</button>
+      <div>
+        <h1 id="cart-title">Your Cart</h1>
+      </div>
+    </div>
+
+    <!-- Delivery ETA Strip -->
+    <div class="cart-delivery-strip">
+      <span class="cart-delivery-icon">⚡</span>
+      <div>
+        <strong>Delivery in 10–15 minutes</strong>
+        <small>Freshly packed from nearby partner stores in Kharagpur</small>
+      </div>
+    </div>
+
+    <!-- Free Delivery Progress Bar -->
+    <div id="free-delivery-banner" class="free-delivery-progress-banner">
+      <div class="progress-copy">
+        <span id="free-delivery-text">Add ₹140 more to get <strong>FREE Delivery</strong></span>
+      </div>
+      <div class="progress-track"><div id="free-delivery-bar" class="progress-fill" style="width: 60%"></div></div>
+    </div>
+
+    <!-- Cart Item List -->
+    <div id="cart-items" class="cart-items-container"></div>
+
+    <!-- "Missed Something?" Quick Add Upsell Carousel -->
+    <section class="cart-upsell-section">
+      <div class="section-heading">
+        <h2>Missed something?</h2>
+        <small class="section-subtext">Popular additions</small>
+      </div>
+      <div id="cart-upsell-rail" class="cart-upsell-rail"></div>
+    </section>
+
+    <!-- Delivery Instructions Pills -->
+    <div class="delivery-instructions-card">
+      <h3>Delivery instructions</h3>
+      <div class="instruction-pills">
+        <button type="button" class="instruction-pill" data-instr="door">🚪 Leave at door</button>
+        <button type="button" class="instruction-pill" data-instr="nobell">🔕 Do not ring bell</button>
+        <button type="button" class="instruction-pill" data-instr="call">📞 Call upon arrival</button>
+        <button type="button" class="instruction-pill" data-instr="pet">🐕 Beware of pets</button>
+      </div>
+    </div>
+
+    <!-- Coupon Box & 1-Click Coupons -->
+    <div class="coupon-section">
+      <div class="coupon-box">
+        <span class="coupon-icon">%</span>
+        <input id="coupon-code" placeholder="Enter coupon code (e.g. WELCOME50)" autocomplete="off">
+        <button id="apply-coupon" type="button">Apply</button>
+      </div>
+      <div class="quick-coupons-rail">
+        <button type="button" class="quick-coupon-pill" data-coupon="WELCOME50">
+          <strong>WELCOME50</strong>
+          <small>Flat ₹50 OFF on ₹199+</small>
+        </button>
+        <button type="button" class="quick-coupon-pill" data-coupon="FREEDEL">
+          <strong>FREEDEL</strong>
+          <small>Free Delivery</small>
+        </button>
+        <button type="button" class="quick-coupon-pill" data-coupon="KHARAGPUR20">
+          <strong>KHARAGPUR20</strong>
+          <small>20% Extra Savings</small>
+        </button>
+      </div>
+    </div>
+
+    <!-- Delivery Partner Tip -->
+    <div class="tip-card">
+      <div class="tip-header">
+        <div>
+          <strong>Tip your delivery partner</strong>
+          <small>100% of your tip goes to your partner Raju Kumar</small>
+        </div>
+        <span class="tip-heart">❤️</span>
+      </div>
+      <div class="tip-selector">
+        <button type="button" class="tip-btn" data-tip="0">None</button>
+        <button type="button" class="tip-btn" data-tip="10">₹10</button>
+        <button type="button" class="tip-btn selected" data-tip="20">₹20</button>
+        <button type="button" class="tip-btn" data-tip="30">₹30</button>
+        <button type="button" class="tip-btn" data-tip="50">₹50</button>
+      </div>
+    </div>
+
+    <!-- Bill Details -->
+    <div class="bill-card">
+      <h2>Bill Details</h2>
+      <div class="bill-row"><span>Item total (MRP)</span><strong id="bill-mrp-total">₹0</strong></div>
+      <div class="bill-row green-text" id="bill-savings-row"><span>Product discount</span><strong id="bill-savings-total">-₹0</strong></div>
+      <div class="bill-row"><span>Item subtotal</span><strong id="cart-subtotal">₹0</strong></div>
+      <div class="bill-row"><span>Delivery partner fee</span><strong id="cart-delivery">₹0</strong></div>
+      <div class="bill-row"><span>Platform & handling fee</span><strong>₹2</strong></div>
+      <div class="bill-row" id="bill-tip-row"><span>Delivery partner tip</span><strong id="bill-tip-display">₹20</strong></div>
+      <div class="bill-row green-text" id="discount-row" hidden><span>Coupon discount</span><strong id="cart-discount">-₹0</strong></div>
+      <div class="bill-total">
+        <span>Grand Total</span>
+        <strong id="cart-total">₹0</strong>
+      </div>
+      <div id="savings-badge-card" class="savings-badge-card">
+        <span>🎉 You are saving <strong id="total-savings-number">₹65</strong> on this order!</span>
+      </div>
+    </div>
+
+    <!-- Cancellation Policy Card -->
+    <div class="cancellation-policy-card">
+      <span>⏱️ <strong>Cancellation Policy:</strong> Orders can be cancelled for free within 2 minutes of placing.</span>
+    </div>
+
+    <button id="checkout-button" class="primary-button checkout-button" type="button">
+      <span>Proceed to Checkout</span>
+      <span id="checkout-btn-total">₹0</span>
+    </button>
+  </main>
+
+  <!-- ==================== PAGE: CHECKOUT VIEW ==================== -->
+  <main id="checkout-view" class="page" hidden>
+    <div class="page-title-row">
+      <button class="back-button" data-view="cart" type="button" aria-label="Back to cart">←</button>
+      <h1 id="checkout-title">Checkout & Payment</h1>
+    </div>
+
+    <form id="checkout-form" class="checkout-form-container">
+      <!-- Address Section -->
+      <div class="checkout-section-card">
+        <div class="checkout-section-header">
+          <h3>📍 Delivery Address</h3>
+          <button type="button" id="use-saved-address-btn" class="text-button">Autofill</button>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            <span id="name-label">Full Name *</span>
+            <input name="name" required autocomplete="name" placeholder="e.g. Ramesh Kumar">
+          </label>
+          <label>
+            <span id="phone-label">10-Digit Mobile Number *</span>
+            <input name="phone" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" required autocomplete="tel" placeholder="e.g. 9876543210">
+          </label>
+          <label class="grid-full">
+            <span id="address-label">Complete Street Address / House No. *</span>
+            <textarea name="address" required placeholder="House / Flat / Shop No., Building Name, Street" rows="2"></textarea>
+          </label>
+          <label>
+            <span id="landmark-label">Landmark</span>
+            <input name="landmark" placeholder="Near Shiv Mandir / Gandhi Chowk">
+          </label>
+          <label>
+            <span id="area-label">Area / Locality *</span>
+            <select name="area" required>
+              <option value="">Select Kharagpur Area</option>
+              <option>Haveli Kharagpur Main Market</option>
+              <option>Gadighat Chowk</option>
+              <option>Railway Colony</option>
+              <option>Sunderpur</option>
+              <option>Patel Nagar / Ward 1-5</option>
+              <option>College Road / Ward 6-10</option>
+              <option>Hospital Road / Ward 11-15</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <!-- Delivery Slot Selection -->
+      <div class="checkout-section-card">
+        <h3>⚡ Select Delivery Slot</h3>
+        <fieldset class="slot-fieldset">
+          <legend class="visually-hidden">Delivery Slot</legend>
+          <label class="radio-card slot-card recommended">
+            <input type="radio" name="slot" value="Urgent 30 min" id="urgent-slot" checked>
+            <div class="radio-content">
+              <span class="slot-badge">INSTANT</span>
+              <strong>Instant 10-15 Mins</strong>
+              <small>Rider departs immediately</small>
+            </div>
+          </label>
+          <label class="radio-card slot-card">
+            <input type="radio" name="slot" value="Morning 11 AM">
+            <div class="radio-content">
+              <strong>Morning Slot</strong>
+              <small>10:00 AM – 11:30 AM</small>
+            </div>
+          </label>
+          <label class="radio-card slot-card">
+            <input type="radio" name="slot" value="Evening 5 PM">
+            <div class="radio-content">
+              <strong>Evening Slot</strong>
+              <small>05:00 PM – 06:30 PM</small>
+            </div>
+          </label>
+          <label class="radio-card slot-card">
+            <input type="radio" name="slot" value="Night 8 PM">
+            <div class="radio-content">
+              <strong>Night Slot</strong>
+              <small>08:00 PM – 09:30 PM</small>
+            </div>
+          </label>
+        </fieldset>
+      </div>
+
+      <!-- Payment Method Selection (Razorpay Ready!) -->
+      <div class="checkout-section-card">
+        <h3>💳 Payment Method</h3>
+        <fieldset class="payment-fieldset">
+          <legend class="visually-hidden">Payment Options</legend>
+
+          <!-- Razorpay Option -->
+          <label class="radio-card payment-card recommended-pay">
+            <input type="radio" name="payment" value="Razorpay Online" id="pay-razorpay" checked>
+            <div class="payment-card-inner">
+              <div class="pay-logo-wrap">
+                <span class="pay-icon-symbol">💳</span>
+                <div>
+                  <strong>Pay Online with Razorpay</strong>
+                  <small>UPI (Google Pay, PhonePe, Paytm), Cards, NetBanking</small>
+                </div>
+              </div>
+              <span class="pay-secure-tag">⚡ Fast &amp; 100% Secure</span>
+            </div>
+          </label>
+
+          <!-- Cash on Delivery -->
+          <label class="radio-card payment-card">
+            <input type="radio" name="payment" value="Cash on Delivery" id="pay-cod">
+            <div class="payment-card-inner">
+              <div class="pay-logo-wrap">
+                <span class="pay-icon-symbol">💵</span>
+                <div>
+                  <strong>Cash on Delivery (COD)</strong>
+                  <small>Pay cash or scan QR when your order arrives</small>
+                </div>
+              </div>
+            </div>
+          </label>
+
+          <!-- Wallet Option -->
+          <label class="radio-card payment-card">
+            <input type="radio" name="payment" value="Kharagpur Fresh Wallet" id="pay-wallet">
+            <div class="payment-card-inner">
+              <div class="pay-logo-wrap">
+                <span class="pay-icon-symbol">👛</span>
+                <div>
+                  <strong>Kharagpur Fresh Wallet</strong>
+                  <small>Available Balance: <span id="checkout-wallet-bal">₹150</span></small>
+                </div>
+              </div>
+            </div>
+          </label>
+        </fieldset>
+      </div>
+
+      <!-- Final Order Summary -->
+      <div class="checkout-summary-strip">
+        <div>
+          <span>Total Payable</span>
+          <strong id="checkout-grand-total">₹0</strong>
+        </div>
+        <button id="place-order" class="primary-button place-order-button" type="submit">
+          Place Order &amp; Pay
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <!-- ==================== PAGE: SUCCESS & LIVE TRACKING VIEW ==================== -->
+  <main id="success-view" class="page" hidden>
+    <div class="success-screen-wrapper">
+      <!-- Confetti Canvas -->
+      <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
+      <div class="success-card">
+        <div class="celebration-badge">
+          <div class="success-icon">✓</div>
+        </div>
+        <h1 id="success-title">Order Placed Successfully!</h1>
+        <p id="order-id-text" class="order-id-badge">Order ID: HK-Loading...</p>
+        <p class="order-promise-text">⚡ Arriving at your doorstep in <strong>10–15 minutes</strong></p>
+
+        <!-- Blinkit-Style Live Order Stepper -->
+        <div class="live-tracker-box">
+          <div class="tracker-steps">
+            <div class="step-item step-done">
+              <div class="step-circle">✓</div>
+              <span>Confirmed</span>
+            </div>
+            <div class="step-line active"></div>
+            <div class="step-item step-current" id="step-packing">
+              <div class="step-circle">📦</div>
+              <span>Packing</span>
+            </div>
+            <div class="step-line" id="line-rider"></div>
+            <div class="step-item" id="step-delivery">
+              <div class="step-circle">🛵</div>
+              <span>Out for Delivery</span>
+            </div>
+            <div class="step-line" id="line-done"></div>
+            <div class="step-item" id="step-delivered">
+              <div class="step-circle">🏠</div>
+              <span>Delivered</span>
+            </div>
+          </div>
+
+          <!-- Animated Rider Map Graphic -->
+          <div class="live-map-sim">
+            <div class="map-route-visual">
+              <span class="store-pin">🏬 Store</span>
+              <div class="route-line"><span class="rider-scooter-anim">🛵</span></div>
+              <span class="home-pin">🏠 You</span>
+            </div>
+            <div class="live-status-pill">
+              <span class="live-dot"></span>
+              <strong id="live-status">Preparing order at Kharagpur Staples</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Verification OTP Box -->
+        <div class="otp-verification-card">
+          <div class="otp-header">
+            <span>🔐 Delivery OTP</span>
+            <strong id="live-order-otp">4829</strong>
+          </div>
+          <small>Share this 4-digit code with your delivery partner only after receiving items.</small>
+        </div>
+
+        <!-- Assigned Delivery Partner Card -->
+        <div class="delivery-partner-card" id="rider-card">
+          <div class="partner-avatar">👨‍🦱</div>
+          <div class="partner-info">
+            <strong>Raju Kumar</strong>
+            <small>Delivery Partner · ⭐ 4.9 (140+ orders)</small>
+            <span class="partner-vehicle">Hero Electric · BR-08-E-4021</span>
+          </div>
+          <a id="call-rider-btn" href="tel:9876543210" class="call-partner-btn" aria-label="Call Delivery Partner">
+            📞 Call
+          </a>
+        </div>
+
+        <!-- 2-Minute Cancellation Window Card -->
+        <div id="cancel-window-box" class="cancel-window-box">
+          <div class="cancel-timer-row">
+            <span>⏱️ Need to change something? Free cancellation within 2 mins.</span>
+            <button id="cancel-order" class="danger-button-outline" type="button">Cancel Order</button>
+          </div>
+        </div>
+
+        <!-- Actions: Download Invoice & Continue Shopping -->
+        <div class="success-actions-row">
+          <button id="view-invoice-btn" class="secondary-button" type="button">📄 View &amp; Print Bill</button>
+          <button class="primary-button" data-view="home" type="button">Order More Items</button>
+        </div>
+
+        <!-- Post-Delivery Rating Box -->
+        <div id="rating-box" class="rating-box" hidden>
+          <h3>How was your delivery experience?</h3>
+          <p>Rate partner Raju Kumar</p>
+          <div id="stars" class="star-rating">
+            <button type="button" data-rating="1" aria-label="1 star">★</button>
+            <button type="button" data-rating="2" aria-label="2 stars">★</button>
+            <button type="button" data-rating="3" aria-label="3 stars">★</button>
+            <button type="button" data-rating="4" aria-label="4 stars">★</button>
+            <button type="button" data-rating="5" aria-label="5 stars">★</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== PAGE: ORDERS VIEW ==================== -->
+  <main id="orders-view" class="page" hidden>
+    <div class="page-title-row">
+      <h1 id="orders-title">My Orders</h1>
+    </div>
+
+    <!-- Active Live Order Section -->
+    <section id="live-order-section" class="live-order-section" hidden>
+      <div class="orders-section-heading">
+        <h2>⚡ Live Order Tracking</h2>
+        <span class="live-label">● In Progress</span>
+      </div>
+      <div id="live-order-card"></div>
+    </section>
+
+    <!-- Past Orders Section -->
+    <section class="order-history-section">
+      <div class="orders-section-heading">
+        <h2>Order History</h2>
+      </div>
+
+      <form id="orders-look-up" class="lookup-card">
+        <input name="phone" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" placeholder="Enter 10-digit mobile number" required>
+        <button type="submit">Find Orders</button>
+      </form>
+
+      <div id="orders-list" class="orders-list"></div>
+    </section>
+  </main>
+
+  <!-- ==================== STICKY FLOATING CART BAR (Blinkit Style) ==================== -->
+  <aside id="sticky-cart" class="sticky-cart" aria-label="Cart Summary" hidden>
+    <div class="sticky-cart-left">
+      <div id="sticky-thumbnails" class="sticky-thumbnails"></div>
+      <div class="sticky-text">
+        <strong id="sticky-count">0 items</strong>
+        <span id="sticky-details" class="sticky-details">₹0 · View Cart</span>
+      </div>
+    </div>
+    <div class="sticky-cart-right">
+      <span id="sticky-total" class="sticky-total">₹0</span>
+      <span class="sticky-arrow">View Cart →</span>
+    </div>
+  </aside>
+
+  <!-- ==================== BOTTOM NAVIGATION (Mobile App Bar) ==================== -->
+  <nav class="bottom-nav">
+    <button class="nav-active" type="button" data-view="home">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22">
+          <path d="m3.5 10 8.5-7 8.5 7v9a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1v-9Z" fill="currentColor"/>
+        </svg>
+      </span>
+      <small id="nav-home">Home</small>
+    </button>
+
+    <button type="button" data-view="home" data-scroll="categories">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22">
+          <circle cx="7" cy="7" r="3" fill="currentColor"/>
+          <circle cx="17" cy="7" r="3" fill="currentColor"/>
+          <circle cx="7" cy="17" r="3" fill="currentColor"/>
+          <circle cx="17" cy="17" r="3" fill="currentColor"/>
+        </svg>
+      </span>
+      <small id="nav-categories">Categories</small>
+    </button>
+
+    <button type="button" id="nav-search-btn" data-action="focus-search">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.3-4.3"/>
+        </svg>
+      </span>
+      <small id="nav-search">Search</small>
+    </button>
+
+    <button type="button" data-view="orders">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 8h14l-1 12H6L5 8Z"/>
+          <path d="M9 8a3 3 0 0 1 6 0"/>
+        </svg>
+      </span>
+      <small id="nav-orders">Orders</small>
+    </button>
+
+    <button type="button" data-view="cart" class="nav-cart-btn">
+      <span class="nav-icon cart-nav-icon-wrap">
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 5h2l2 11h10l2-8H7"/>
+          <circle cx="10" cy="20" r="1" fill="currentColor"/>
+          <circle cx="18" cy="20" r="1" fill="currentColor"/>
+        </svg>
+        <span id="nav-cart-badge" class="nav-cart-badge" hidden>0</span>
+      </span>
+      <small id="nav-cart">Cart</small>
+    </button>
+  </nav>
+
+  <!-- ==================== MODALS & DRAWERS ==================== -->
+
+  <!-- 1. Location & Locality Selector Drawer -->
+  <div id="location-drawer" class="modal-backdrop" hidden>
+    <div class="drawer-card">
+      <div class="drawer-header">
+        <h3>📍 Select Delivery Location</h3>
+        <button type="button" class="drawer-close" data-close-modal="location-drawer">✕</button>
+      </div>
+
+      <button id="gps-detect-btn" class="gps-detect-btn" type="button">
+        <span class="gps-icon">🎯</span>
+        <div>
+          <strong>Detect Current Location</strong>
+          <small>Using GPS / Geolocation</small>
+        </div>
+      </button>
+
+      <div class="drawer-subhead">Popular Kharagpur Localities</div>
+      <div class="locality-list">
+        <button type="button" class="locality-item" data-area="Gandhi Chowk, Haveli Kharagpur - 811202">
+          <strong>Gandhi Chowk (Main Market)</strong>
+          <small>Haveli Kharagpur · 811202</small>
+        </button>
+        <button type="button" class="locality-item" data-area="Gadighat Chowk, Haveli Kharagpur - 811202">
+          <strong>Gadighat Chowk</strong>
+          <small>Near River Bridge · 811202</small>
+        </button>
+        <button type="button" class="locality-item" data-area="Railway Colony, Kharagpur - 811202">
+          <strong>Railway Colony</strong>
+          <small>Station Road · 811202</small>
+        </button>
+        <button type="button" class="locality-item" data-area="Sunderpur, Kharagpur - 811202">
+          <strong>Sunderpur</strong>
+          <small>Munger Road · 811202</small>
+        </button>
+        <button type="button" class="locality-item" data-area="Patel Nagar, Ward 1-5, Kharagpur">
+          <strong>Patel Nagar (Ward 1-5)</strong>
+          <small>Haveli Kharagpur</small>
+        </button>
+        <button type="button" class="locality-item" data-area="College Road, Ward 6-10, Kharagpur">
+          <strong>College Road (Ward 6-10)</strong>
+          <small>Near RS College</small>
+        </button>
+        <button type="button" class="locality-item" data-area="Hospital Road, Ward 11-15, Kharagpur">
+          <strong>Hospital Road (Ward 11-15)</strong>
+          <small>Near Referral Hospital</small>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Product Detail Quick-View Modal -->
+  <div id="product-modal" class="modal-backdrop" hidden>
+    <div class="product-detail-card">
+      <button type="button" class="drawer-close detail-close" data-close-modal="product-modal">✕</button>
+      <div class="product-modal-image-wrap">
+        <span id="modal-product-badge" class="product-badge">⚡ 10 MINS</span>
+        <img id="modal-product-img" src="" alt="" loading="lazy">
+      </div>
+      <div class="product-modal-body">
+        <div class="modal-shop-name" id="modal-product-shop">Kharagpur Staples</div>
+        <h2 id="modal-product-name" class="modal-product-title">Product Name</h2>
+        <div id="modal-product-name-hi" class="modal-product-hindi">उत्पाद का नाम</div>
+        <div id="modal-product-unit" class="modal-product-unit">1 kg</div>
+
+        <div class="modal-rating-row">
+          <span class="rating-badge">★ <span id="modal-product-rating">4.8</span></span>
+          <span id="modal-product-reviews" class="reviews-count">(120 ratings)</span>
+          <span class="delivery-time-tag">⚡ 10 MINS</span>
+        </div>
+
+        <div class="modal-price-row">
+          <div class="price-wrap">
+            <strong id="modal-product-price" class="modal-price">₹0</strong>
+            <span id="modal-product-mrp" class="modal-mrp">₹0</span>
+            <span id="modal-product-discount" class="discount-pill">0% OFF</span>
+          </div>
+          <div id="modal-action-wrap"></div>
+        </div>
+
+        <div class="modal-details-tabs">
+          <h3>Product Details</h3>
+          <p id="modal-product-desc" class="modal-desc">Detailed fresh grocery description.</p>
+          <div class="key-features">
+            <div><strong>Sourced Fresh:</strong> <span>Daily harvest</span></div>
+            <div><strong>Shelf Life:</strong> <span>Check pack for expiry</span></div>
+            <div><strong>Return Policy:</strong> <span>Instant doorstep replacement</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Profile & Wallet Drawer -->
+  <div id="profile-drawer" class="modal-backdrop" hidden>
+    <div class="drawer-card profile-drawer-card">
+      <div class="drawer-header">
+        <div class="user-greeting">
+          <span class="user-avatar-circle">👤</span>
+          <div>
+            <strong id="drawer-user-name">Welcome to Kharagpur Fresh</strong>
+            <small id="drawer-user-phone">Instant Grocery Delivery</small>
+          </div>
+        </div>
+        <button type="button" class="drawer-close" data-close-modal="profile-drawer">✕</button>
+      </div>
+
+      <!-- Wallet Balance Box -->
+      <div class="wallet-balance-card">
+        <div class="wallet-header">
+          <div>
+            <span>Kharagpur Fresh Wallet</span>
+            <strong id="drawer-wallet-balance">₹150</strong>
+          </div>
+          <span class="wallet-icon-big">🪙</span>
+        </div>
+        <div class="wallet-quick-add">
+          <span class="quick-add-label">Quick Add Balance:</span>
+          <div class="quick-add-pills">
+            <button type="button" class="add-wallet-btn" data-add="100">+₹100</button>
+            <button type="button" class="add-wallet-btn" data-add="200">+₹200</button>
+            <button type="button" class="add-wallet-btn" data-add="500">+₹500</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Navigation Links -->
+      <div class="profile-nav-list">
+        <button type="button" class="profile-nav-item" data-view="orders">
+          <span>📦 My Orders &amp; Tracking</span>
+          <span>›</span>
+        </button>
+        <button type="button" class="profile-nav-item" id="drawer-location-trigger">
+          <span>📍 Delivery Addresses</span>
+          <span>›</span>
+        </button>
+        <button type="button" class="profile-nav-item" id="drawer-lang-toggle">
+          <span>🌐 Language: <strong id="drawer-lang-name">English</strong></span>
+          <span>Switch</span>
+        </button>
+        <a href="https://wa.me/919876543210" target="_blank" rel="noopener" class="profile-nav-item">
+          <span>💬 WhatsApp Help &amp; Support</span>
+          <span>Open</span>
+        </a>
+        <div class="profile-divider"></div>
+        <a href="./admin.html" class="profile-nav-item admin-link">
+          <span>⚙️ Store Admin Portal</span>
+          <span>›</span>
+        </a>
+        <a href="./delivery.html" class="profile-nav-item delivery-link">
+          <span>🛵 Delivery Agent Portal</span>
+          <span>›</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Interactive Razorpay Simulation Modal (for Demo / Test Mode) -->
+  <div id="razorpay-modal" class="modal-backdrop" hidden>
+    <div class="razorpay-dialog">
+      <div class="rzp-header">
+        <div class="rzp-logo">
+          <strong>Razorpay</strong>
+          <small>Trusted by 5 Crore+ Indians</small>
+        </div>
+        <button type="button" class="drawer-close" data-close-modal="razorpay-modal">✕</button>
+      </div>
+
+      <div class="rzp-amount-bar">
+        <span>Paying to Kharagpur Fresh</span>
+        <strong id="rzp-modal-amount">₹0</strong>
+      </div>
+
+      <div class="rzp-options">
+        <label class="rzp-option selected">
+          <input type="radio" name="rzp-method" value="upi-gpay" checked>
+          <span class="rzp-opt-text">
+            <strong>Google Pay / PhonePe UPI</strong>
+            <small>Instant UPI payment approval</small>
+          </span>
+          <span class="rzp-badge">Fast</span>
+        </label>
+
+        <label class="rzp-option">
+          <input type="radio" name="rzp-method" value="card">
+          <span class="rzp-opt-text">
+            <strong>Credit / Debit Card</strong>
+            <small>Visa, Mastercard, RuPay</small>
+          </span>
+        </label>
+
+        <label class="rzp-option">
+          <input type="radio" name="rzp-method" value="netbanking">
+          <span class="rzp-opt-text">
+            <strong>Net Banking</strong>
+            <small>SBI, HDFC, ICICI, Axis &amp; 50+ Banks</small>
+          </span>
+        </label>
+      </div>
+
+      <div class="rzp-footer">
+        <button id="rzp-pay-confirm" class="primary-button rzp-btn" type="button">
+          Pay <span id="rzp-btn-amount">₹0</span> Securely
+        </button>
+        <small class="rzp-hint">🔒 256-bit SSL encrypted payment</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Professional Invoice / Receipt Modal -->
+  <div id="invoice-modal" class="modal-backdrop" hidden>
+    <div class="invoice-card" id="printable-invoice">
+      <div class="invoice-header">
+        <div>
+          <h2>KHARAGPUR FRESH</h2>
+          <small>Instant Hyperlocal Delivery · Haveli Kharagpur</small>
+          <p class="invoice-meta" id="inv-date-time"></p>
+        </div>
+        <button type="button" class="drawer-close no-print" data-close-modal="invoice-modal">✕</button>
+      </div>
+
+      <div class="inv-customer-box">
+        <div><strong>Billed to:</strong> <span id="inv-customer-name">Customer</span></div>
+        <div><strong>Phone:</strong> <span id="inv-customer-phone">9876543210</span></div>
+        <div><strong>Address:</strong> <span id="inv-customer-addr">Gandhi Chowk</span></div>
+        <div><strong>Order ID:</strong> <span id="inv-order-id">HK123456</span></div>
+      </div>
+
+      <table class="inv-table">
+        <thead>
+          <tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr>
+        </thead>
+        <tbody id="inv-items-table"></tbody>
+      </table>
+
+      <div class="inv-summary">
+        <div><span>Subtotal:</span><strong id="inv-subtotal">₹0</strong></div>
+        <div><span>Delivery Fee:</span><strong id="inv-delivery">₹0</strong></div>
+        <div><span>Discount:</span><strong id="inv-discount">-₹0</strong></div>
+        <div class="inv-grand-total"><span>Grand Total Paid:</span><strong id="inv-total">₹0</strong></div>
+      </div>
+
+      <div class="invoice-actions no-print">
+        <button type="button" class="primary-button" onclick="window.print()">🖨️ Print / Save PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- App Script (ES Module) -->
+  <script type="module" src="./app.js?v=4"></script>
+</body>
+</html>

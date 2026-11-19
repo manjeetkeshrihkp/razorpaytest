@@ -1,0 +1,13 @@
+{
+  "name":"Kharagpur Fresh",
+  "short_name":"Kharagpur Fresh",
+  "description":"Hyperlocal grocery delivery in Haveli Kharagpur",
+  "start_url":"./index.html",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#ffffff",
+  "theme_color":"#16a34a",
+  "icons":[
+    {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}

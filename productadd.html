@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Product Manager</title><link rel="stylesheet" href="./style.css"></head>
+<body class="admin-body">
+  <header class="admin-header"><div><strong>Product Manager</strong><small>Haveli Kharagpur</small></div><button id="logout" class="header-button" type="button">Logout</button></header>
+  <main class="admin-page">
+    <div id="auth-loading" class="admin-card">Checking admin access…</div>
+    <section id="admin-content" hidden>
+      <div class="admin-grid">
+        <form id="product-form" class="admin-card">
+          <h2 id="form-title">Add product</h2>
+          <input type="hidden" name="id">
+          <label>Product name<input name="name" required></label>
+          <label>Hindi name (optional)<input name="nameHi"></label>
+          <label>Category<select name="category" required><option>Grocery</option><option>Vegetables</option><option>Fruits</option><option>Dairy & Bakery</option><option>Snacks</option><option>Medicine</option><option>Ready Food</option></select></label>
+          <label>Shop<select name="shopId" id="shop-select" required></select></label>
+          <div class="field-row"><label>Price (₹)<input name="price" type="number" min="1" required></label><label>Unit<input name="unit" placeholder="500g / 1kg / piece" required></label></div>
+          <label>Description<textarea name="description"></textarea></label>
+          <label>Image URL<input name="image" type="url" id="image-url"></label>
+          <label>Or upload image<input name="imageFile" type="file" accept="image/*"></label>
+          <img id="image-preview" class="image-preview" alt="Image preview" hidden>
+          <label class="toggle-row"><span>In stock</span><input name="inStock" type="checkbox" checked></label>
+          <button class="primary-button" type="submit">Save product</button>
+        </form>
+        <section class="admin-card">
+          <h2>Bulk add</h2>
+          <p class="muted">Upload CSV or JSON. CSV columns: name,nameHi,category,shopId,price,unit,image,description,inStock</p>
+          <input id="bulk-file" type="file" accept=".csv,.json">
+          <textarea id="bulk-json" placeholder='[{"name":"Milk","category":"Dairy & Bakery","shopId":"s3","price":35,"unit":"500ml","inStock":true}]'></textarea>
+          <button id="bulk-add" class="secondary-button" type="button">Add bulk products</button>
+        </section>
+      </div>
+      <section class="admin-card product-manager">
+        <div class="section-heading"><h2>All products</h2><span id="product-count"></span></div>
+        <div class="field-row filters">
+          <input id="product-search" placeholder="Search products">
+          <select id="category-filter"><option value="">All categories</option><option>Grocery</option><option>Vegetables</option><option>Fruits</option><option>Dairy & Bakery</option><option>Snacks</option><option>Medicine</option><option>Ready Food</option></select>
+          <select id="shop-filter"><option value="">All shops</option></select>
+        </div>
+        <div id="product-list" class="product-list"></div>
+      </section>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+  <script type="module" src="./productadd.js"></script>
+</body>
+</html>

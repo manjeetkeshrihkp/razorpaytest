@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin - Kharagpur Fresh</title><link rel="stylesheet" href="./style.css"></head>
+<body class="admin-body">
+  <header class="admin-header"><div><strong>Store Admin</strong><small>Haveli Kharagpur</small></div><button id="logout" class="header-button" type="button" hidden>Logout</button></header>
+  <main class="admin-page">
+    <form id="login-view" class="admin-card admin-login">
+      <h2>Admin login</h2><label>Email<input name="email" type="email" required></label><label>Password<input name="password" type="password" required></label><button class="primary-button" type="submit">Sign in</button>
+      <p class="muted">Open <a href="./productadd.html">Product Manager</a> after login.</p>
+    </form>
+    <section id="dashboard" hidden>
+      <nav class="admin-tabs">
+        <button class="admin-tab active" data-tab="orders" type="button">Orders</button>
+        <button class="admin-tab" data-tab="shops" type="button">Shops</button>
+        <button class="admin-tab" data-tab="batches" type="button">Batch View</button>
+        <button class="admin-tab" data-tab="ledger" type="button">Ledger</button>
+        <button class="admin-tab" data-tab="settings" type="button">Settings</button>
+        <button class="admin-tab" data-tab="agents" type="button">Agents</button>
+        <button class="admin-tab" data-tab="analytics" type="button">Analytics</button>
+      </nav>
+      <section id="view-orders" class="admin-view">
+        <div class="admin-card">
+          <div class="admin-orders-toolbar">
+            <select id="status-filter"><option value="">All statuses</option><option>New</option><option>Accepted</option><option>Out for Delivery</option><option>Delivered</option><option>Cancelled</option></select>
+            <select id="slot-filter"><option value="">All slots</option><option>Morning 11 AM</option><option>Evening 5 PM</option><option>Night 8 PM</option><option>Urgent 30 min</option></select>
+            <input id="date-filter" type="date">
+          </div>
+          <div id="orders-list">Loading orders…</div>
+        </div>
+      </section>
+      <section id="view-shops" class="admin-view" hidden><div class="admin-card"><h2>Shops</h2><div id="shops-list"></div><button id="add-shop" class="secondary-button" type="button">Add shop</button></div></section>
+      <section id="view-batches" class="admin-view" hidden><div id="batch-list" class="admin-card">Loading batches…</div></section>
+      <section id="view-ledger" class="admin-view" hidden><div class="admin-card"><div class="section-heading"><h2>Commission ledger</h2><button id="export-ledger" class="secondary-button" type="button">Export CSV</button></div><div id="ledger-list"></div></div></section>
+      <section id="view-settings" class="admin-view" hidden>
+        <form id="settings-form" class="admin-card">
+          <h2>Store settings</h2>
+          <div class="field-row"><label>Minimum order (₹)<input name="minOrder" type="number" min="0"></label><label>Delivery fee (₹)<input name="deliveryFee" type="number" min="0"></label></div>
+          <div class="field-row"><label>Free delivery above (₹)<input name="freeDeliveryAbove" type="number" min="0"></label><label>Urgent fee (₹)<input name="urgentFee" type="number" min="0"></label></div>
+          <div class="field-row"><label>Store open time<input name="openTime" type="time"></label><label>Store close time<input name="closeTime" type="time"></label></div>
+          <label>WhatsApp number (international digits)<input name="storeWhatsApp" placeholder="919876543210"></label>
+          <label>Announcement banner<input name="announcement"></label>
+          <label class="toggle-row"><span>Store open</span><input name="storeOpen" type="checkbox"></label>
+          <label class="toggle-row"><span>Hide out-of-stock products</span><input name="hideOutOfStock" type="checkbox"></label>
+          <h3>Coupons</h3><div id="coupons-list"></div><button id="add-coupon" class="secondary-button" type="button">Add coupon</button>
+          <button class="primary-button" type="submit" style="margin-top:12px">Save settings</button>
+        </form>
+      </section>
+      <section id="view-agents" class="admin-view" hidden><div class="admin-card"><h2>Delivery agents</h2><div id="agents-list"></div><button id="add-agent" class="secondary-button" type="button">Add agent profile</button></div></section>
+      <section id="view-analytics" class="admin-view" hidden><div class="metric-grid" id="analytics-metrics"></div><div class="admin-card"><h2>Top selling items</h2><div id="top-items"></div><h2>Busiest slots</h2><div id="slot-stats"></div></div></section>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script type="module" src="./admin.js"></script>
+</body>
+</html>
